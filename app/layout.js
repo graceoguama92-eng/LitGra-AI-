@@ -2,7 +2,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "LitGra AI",
-  description: "Create images, stories and videos with AI.",
+  description: "AI creative studio for images, video and voice.",
 };
 
 export default function RootLayout({ children }) {
