@@ -11,7 +11,10 @@ export async function POST(request) {
     const { prompt } = await request.json();
 
     if (!prompt || !prompt.trim()) {
-      return Response.json({ error: "A prompt is required." }, { status: 400 });
+      return Response.json(
+        { error: "A prompt is required." },
+        { status: 400 }
+      );
     }
 
     const result = await client.images.generate({
@@ -21,15 +24,27 @@ export async function POST(request) {
     });
 
     const b64 = result?.data?.[0]?.b64_json;
+
     if (!b64) {
-      return Response.json({ error: "No image was returned." }, { status: 502 });
+      return Response.json(
+        { error: "OpenAI did not return an image." },
+        { status: 502 }
+      );
     }
 
-    return Response.json({ image: `data:image/png;base64,${b64}` });
+    return Response.json({
+      image: `data:image/png;base64,${b64}`,
+    });
+
   } catch (error) {
     console.error("LitGra image generation error:", error);
+
     return Response.json(
-      { error: "Image generation failed. Check your OpenAI API key, billing, and server logs." },
+      {
+        error:
+          error?.message ||
+          "Image generation failed. Check the Vercel logs.",
+      },
       { status: 500 }
     );
   }
